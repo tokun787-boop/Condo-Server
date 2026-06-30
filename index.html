@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Condo Games Card - Transparent Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0d0202; /* Background gelap kemerahan pas sesuai gambar */
+        }
+        #rainCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .content-container {
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <canvas id="rainCanvas"></canvas>
+
+    <div class="content-container w-full max-w-[340px]">
+        <!-- Tombol / Link ke condo_server.html -->
+        <a href="condo_server.html" class="block">
+            <div class="bg-[#1a0a0a]/20 border border-[#ff3333]/15 rounded-2xl p-6 backdrop-blur-md shadow-2xl transition-all duration-300 hover:border-[#ff3333]/40 hover:bg-[#1a0a0a]/30 cursor-pointer group">
+                
+                <div class="text-[#ff3333] mb-4 transition-transform duration-300 group-hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.048.58.024 1.193-.14 1.743m-1.353 1.353-1.922-.482a2.453 2.453 0 0 0-1.74.075L3.03 9.616a2.453 2.453 0 0 0-.075 1.74l.482 1.922" />
+                    </svg>
+                </div>
+
+                <h2 class="text-white font-black text-xl tracking-wide uppercase mb-2">
+                    Condo Games
+                </h2>
+
+                <p class="text-zinc-400/80 text-xs leading-relaxed font-light">
+                    Games Condo Se
+                </p>
+                
+            </div>
+        </a>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('rainCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const maxDrops = 65; 
+        const drops = [];
+
+        for (let i = 0; i < maxDrops; i++) {
+            drops.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                length: Math.random() * 50 + 30, 
+                speed: Math.random() * 4 + 2,    
+                opacity: Math.random() * 0.5 + 0.15 
+            });
+        }
+
+        function drawRain() {
+            // Ditweak agar warna gelap di canvas sedikit lebih cerah/jelas
+            ctx.fillStyle = 'rgba(13, 2, 2, 0.22)'; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < maxDrops; i++) {
+                const d = drops[i];
+
+                const gradient = ctx.createLinearGradient(d.x, d.y, d.x, d.y + d.length);
+                gradient.addColorStop(0, 'transparent');
+                gradient.addColorStop(1, `rgba(255, 40, 40, ${d.opacity})`);
+
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 1.8; 
+                ctx.beginPath();
+                ctx.moveTo(d.x, d.y);
+                ctx.lineTo(d.x, d.y + d.length); 
+                ctx.stroke();
+
+                d.y += d.speed;
+
+                if (d.y > canvas.height) {
+                    d.x = Math.random() * canvas.width;
+                    d.y = -d.length;
+                    d.speed = Math.random() * 4 + 2;
+                    d.opacity = Math.random() * 0.5 + 0.15;
+                }
+            }
+            requestAnimationFrame(drawRain);
+        }
+
+        drawRain();
+    </script>
+
+</body>
+</html>
