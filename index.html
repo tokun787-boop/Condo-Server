@@ -3,117 +3,525 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Condo Games Card - Transparent Style</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Condo Games - Private Servers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body, html {
+        * {
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            background-color: #0d0202; /* Background gelap kemerahan pas sesuai gambar */
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
-        #rainCanvas {
-            position: absolute;
+
+        body {
+            background-color: #0b0914;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #loading-screen {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
-            pointer-events: none;
+            background: radial-gradient(circle at center, #1a103c 0%, #0b0914 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
         }
-        .content-container {
+
+        .loader-logo-container {
             position: relative;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .loader-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgba(168, 85, 247, 0.2);
+            border-top: 2px solid #a855f7;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+
+        .loader-ring-inner {
+            position: absolute;
+            width: 75px;
+            height: 75px;
+            border: 2px solid rgba(236, 72, 153, 0.2);
+            border-bottom: 2px solid #ec4899;
+            border-radius: 50%;
+            animation: spin-reverse 1s linear infinite;
+        }
+
+        .loader-center-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            transform: rotate(45deg);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+        }
+
+        .loader-center-icon i {
+            transform: rotate(-45deg);
+            color: white;
+            font-size: 18px;
+        }
+
+        .loading-title {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            color: #d1d5db;
+            margin-bottom: 5px;
+        }
+
+        .loading-title span {
+            background: linear-gradient(90deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .loading-bar-container {
+            width: 220px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .loading-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #a855f7, #ec4899);
+            border-radius: 2px;
+            transition: width 0.2s ease;
+        }
+
+        .loading-text {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 10px;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin-reverse { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+
+        #app-content {
+            display: none;
+            padding-bottom: 40px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(15, 13, 26, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .brand-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            transform: rotate(45deg);
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .brand-icon i {
+            transform: rotate(-45deg);
+            font-size: 12px;
+            color: white;
+        }
+
+        .nav-brand span span {
+            background: linear-gradient(90deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-banner {
+            margin: 15px 15px 25px 15px;
+            background: linear-gradient(180deg, rgba(26, 21, 48, 0.6) 0%, rgba(15, 13, 26, 0.9) 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 210px;
+            background: #151225;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hero-image-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+            position: absolute;
+        }
+
+        .roblox-avatar-container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .roblox-avatar-img {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            border: 2px solid #a855f7;
+            object-fit: cover;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+            margin-bottom: 8px;
+            background: #1f1a3a;
+        }
+
+        .roblox-avatar-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #f3f4f6;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 3px 10px;
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+        }
+
+        .live-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            z-index: 5;
+        }
+
+        .hero-content {
+            padding: 15px;
+        }
+
+        .hero-content h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .hero-content p {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .section-title i {
+            color: #a855f7;
+            font-size: 12px;
+        }
+
+        .section-stats {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        .server-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 0 15px;
+        }
+
+        .server-card {
+            background: #13111f;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .server-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 160px;
+            background: #1a162b;
+            overflow: hidden;
+        }
+
+        .server-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .available-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #34d399;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 6px;
+            backdrop-filter: blur(4px);
             z-index: 10;
+        }
+
+        .server-info {
+            padding: 15px;
+        }
+
+        .server-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .server-players-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .player-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 1.5px solid #a855f7;
+            object-fit: cover;
+            background: #1f1a3a;
+            margin-left: -8px;
+        }
+
+        .player-avatar:first-child {
+            margin-left: 0;
+        }
+
+        .player-count-text {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+
+        .join-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #8b5cf6, #ec4899);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            transition: opacity 0.2s, transform 0.1s;
+            letter-spacing: 0.5px;
+        }
+
+        .join-btn:active {
+            transform: scale(0.98);
+            opacity: 0.9;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body>
 
-    <canvas id="rainCanvas"></canvas>
-
-    <div class="content-container w-full max-w-[340px] flex flex-col gap-4">
-        <!-- Rivals Private Servers -->
-        
-
-        <!-- Tombol / Link ke condo_server.html -->
-        <a href="condo_server.html" class="block">
-            <div class="bg-[#1a0a0a]/20 border border-[#ff3333]/15 rounded-2xl p-6 backdrop-blur-md shadow-2xl transition-all duration-300 hover:border-[#ff3333]/40 hover:bg-[#1a0a0a]/30 cursor-pointer group">
-                
-                <div class="text-[#ff3333] mb-4 transition-transform duration-300 group-hover:scale-110">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.048.58.024 1.193-.14 1.743m-1.353 1.353-1.922-.482a2.453 2.453 0 0 0-1.74.075L3.03 9.616a2.453 2.453 0 0 0-.075 1.74l.482 1.922" />
-                    </svg>
-                </div>
-
-                <h2 class="text-white font-black text-xl tracking-wide uppercase mb-2">
-                    Condo Games
-                </h2>
-
-                <p class="text-zinc-400/80 text-xs leading-relaxed font-light">
-                    Games Condo Se
-                </p>
-                
+    <!-- LOADING SCREEN -->
+    <div id="loading-screen">
+        <div class="loader-logo-container">
+            <div class="loader-ring"></div>
+            <div class="loader-ring-inner"></div>
+            <div class="loader-center-icon">
+                <i class="fa-solid fa-gem"></i>
             </div>
-        </a>
+        </div>
+        <div class="loading-title">WELCOME TO <span>CONDO GAMES</span></div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loading-bar"></div>
+        </div>
+        <div class="loading-text" id="loading-text">Loading...</div>
     </div>
 
+    <!-- MAIN APP -->
+    <div id="app-content">
+        <header class="navbar">
+            <div class="nav-brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-gem"></i>
+                </div>
+                <span>CONDO <span>GAMES</span></span>
+            </div>
+        </header>
+
+        <!-- Hero Section dengan Video -->
+        <div class="hero-banner">
+            <div class="hero-image-wrapper">
+                <span class="live-badge">LIVE</span>
+                
+                <!-- VIDEO DARI GITHUB - folder "image" -->
+                <video autoplay loop muted playsinline>
+                    <source src="https://raw.githubusercontent.com/tokun787-boop/Condo-Games-/main/image/vidio.mp4" type="video/mp4">
+                    Browser Anda tidak mendukung video.
+                </video>            
+                </div>
+            </div>
+            <div class="hero-content">
+                <h1>Condo Games Private</h1>
+                <p>Choose your favorite Roblox private server and join now</p>
+            </div>
+        </div>
+
+        <!-- Section Title -->
+        <div class="section-header">
+            <div class="section-title">
+                <i class="fa-solid fa-gem"></i> Private Servers
+            </div>
+            <div class="section-stats">
+                2 Servers &bull; 23 Online
+            </div>
+        </div>
+
+        <!-- Daftar Server -->
+        <div class="server-list">
+            
+            <!-- Server 01 -->
+            <div class="server-card">
+                <div class="server-thumbnail">
+                    <span class="available-badge">AVAILABLE</span>
+                    <img src="https://raw.githubusercontent.com/tokun787-boop/Condo-Games-/main/image/server1.jpg" alt="Server 1 Banner">
+                </div>
+                <div class="server-info">
+                    <div class="server-name">Server 01</div>
+                    
+                    <div class="server-players-container">
+                        <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-A4F764CB5B7A62140A826DCBA9EE5F7E-Png/150/150/AvatarHeadshot/Webp/noFilter" class="player-avatar" alt="Player">
+                        <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-456E27ADA99A21CADD2590306EE214A6-Png/150/150/AvatarHeadshot/Webp/noFilter" class="player-avatar" alt="Player">
+                        <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-E5988C142C147FC9D3D0DA0C7736C712-Png/150/150/AvatarHeadshot/Webp/noFilter" class="player-avatar" alt="Player">
+                        <span class="player-count-text">14 / 20 Online</span>
+                    </div>
+
+                    <a href="https://roblox.com.bz/games/15884350761/UPDATE-Bloody-Ragdoll-Engine-Remastered?privateServerLinkCode=42560767311389988615080891846891" class="join-btn" target="_blank">JOIN SERVER</a>
+                </div>
+            </div>
+
+            <!-- Server 02 -->
+            <div class="server-card">
+                <div class="server-thumbnail">
+                    <span class="available-badge">AVAILABLE</span>
+                    <img src="https://raw.githubusercontent.com/tokun787-boop/Condo-Games-/main/image/server2.jpg" alt="Server 2 Banner">
+                </div>
+                <div class="server-info">
+                    <div class="server-name">Server 02</div>
+                    
+                    <div class="server-players-container">
+                        <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-0C6CBD98ADBB8879842179209E12BF5D-Png/150/150/AvatarHeadshot/Webp/noFilter" class="player-avatar" alt="Player">
+                        <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-2968EC43814C0D3ACB51889553F6F0D5-Png/150/150/AvatarHeadshot/Webp/noFilter" class="player-avatar" alt="Player">
+                        <span class="player-count-text">2 / 20 Online</span>
+                    </div>
+
+                    <a href="https://roblox.com.bz/games/15884350761/UPDATE-Bloody-Ragdoll-Engine-Remastered?privateServerLinkCode=42560767311389988615080891846891" class="join-btn" target="_blank">JOIN SERVER</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script Loading -->
     <script>
-        const canvas = document.getElementById('rainCanvas');
-        const ctx = canvas.getContext('2d');
+        let width = 0;
+        const bar = document.getElementById('loading-bar');
+        const text = document.getElementById('loading-text');
+        const loadingScreen = document.getElementById('loading-screen');
+        const appContent = document.getElementById('app-content');
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        const maxDrops = 65; 
-        const drops = [];
-
-        for (let i = 0; i < maxDrops; i++) {
-            drops.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height - canvas.height,
-                length: Math.random() * 50 + 30, 
-                speed: Math.random() * 4 + 2,    
-                opacity: Math.random() * 0.5 + 0.15 
-            });
-        }
-
-        function drawRain() {
-            // Ditweak agar warna gelap di canvas sedikit lebih cerah/jelas
-            ctx.fillStyle = 'rgba(13, 2, 2, 0.22)'; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            for (let i = 0; i < maxDrops; i++) {
-                const d = drops[i];
-
-                const gradient = ctx.createLinearGradient(d.x, d.y, d.x, d.y + d.length);
-                gradient.addColorStop(0, 'transparent');
-                gradient.addColorStop(1, `rgba(255, 40, 40, ${d.opacity})`);
-
-                ctx.strokeStyle = gradient;
-                ctx.lineWidth = 1.8; 
-                ctx.beginPath();
-                ctx.moveTo(d.x, d.y);
-                ctx.lineTo(d.x, d.y + d.length); 
-                ctx.stroke();
-
-                d.y += d.speed;
-
-                if (d.y > canvas.height) {
-                    d.x = Math.random() * canvas.width;
-                    d.y = -d.length;
-                    d.speed = Math.random() * 4 + 2;
-                    d.opacity = Math.random() * 0.5 + 0.15;
-                }
+        const loadingInterval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(loadingInterval);
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    appContent.style.display = 'block';
+                }, 500);
+            } else {
+                width += Math.floor(Math.random() * 15) + 5;
+                if (width > 100) width = 100;
+                bar.style.width = width + '%';
+                text.innerText = `Loading... ${width}%`;
             }
-            requestAnimationFrame(drawRain);
-        }
-
-        drawRain();
+        }, 150);
     </script>
-
 </body>
 </html>
