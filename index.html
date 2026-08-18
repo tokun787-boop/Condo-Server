@@ -2,95 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Condo Games - Private Servers</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Condo Games · Private Servers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            background-color: #0b0914;
-            color: #ffffff;
+            background: #0b0914;
+            color: #f2f4fc;
+            font-family: 'Inter', system-ui, sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
         }
 
+        /* ---------- LOADING SCREEN ---------- */
         #loading-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, #1a103c 0%, #0b0914 100%);
+            inset: 0;
+            z-index: 9999;
+            background: radial-gradient(circle at 30% 40%, #1a103c, #0b0914 80%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
-
-        .loader-logo-container {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 25px;
+            transition: opacity 0.6s ease;
         }
 
         .loader-ring {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 2px solid rgba(168, 85, 247, 0.2);
-            border-top: 2px solid #a855f7;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
-            animation: spin 1.5s linear infinite;
+            border: 2px solid rgba(168, 85, 247, 0.15);
+            border-top: 2px solid #a855f7;
+            animation: spin 1.2s linear infinite;
+            position: relative;
         }
 
-        .loader-ring-inner {
+        .loader-ring::after {
+            content: '';
             position: absolute;
-            width: 75px;
-            height: 75px;
-            border: 2px solid rgba(236, 72, 153, 0.2);
-            border-bottom: 2px solid #ec4899;
+            inset: 10px;
             border-radius: 50%;
+            border: 2px solid rgba(236, 72, 153, 0.15);
+            border-bottom: 2px solid #ec4899;
             animation: spin-reverse 1s linear infinite;
         }
 
-        .loader-center-icon {
-            width: 45px;
-            height: 45px;
+        .loader-gem {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, #a855f7, #ec4899);
-            transform: rotate(45deg);
-            border-radius: 8px;
+            border-radius: 10px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
         }
 
-        .loader-center-icon i {
-            transform: rotate(-45deg);
-            color: white;
+        .loader-gem i {
             font-size: 18px;
+            color: #fff;
         }
 
         .loading-title {
+            margin-top: 30px;
+            font-weight: 700;
             font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 3px;
-            color: #d1d5db;
-            margin-bottom: 5px;
+            letter-spacing: 2px;
         }
 
         .loading-title span {
@@ -99,45 +87,52 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .loading-bar-container {
+        .loading-bar-track {
             width: 220px;
             height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            margin-top: 18px;
             overflow: hidden;
         }
 
-        .loading-bar {
+        .loading-bar-fill {
             width: 0%;
             height: 100%;
             background: linear-gradient(90deg, #a855f7, #ec4899);
-            border-radius: 2px;
+            border-radius: 4px;
             transition: width 0.2s ease;
         }
 
         .loading-text {
             font-size: 12px;
             color: #9ca3af;
-            margin-top: 10px;
+            margin-top: 12px;
+            letter-spacing: 0.5px;
         }
 
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes spin-reverse { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes spin-reverse {
+            to { transform: rotate(-360deg); }
+        }
 
+        /* ---------- MAIN CONTENT ---------- */
         #app-content {
             display: none;
             padding-bottom: 40px;
         }
 
+        /* navbar */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            background-color: rgba(15, 13, 26, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 14px 20px;
+            background: rgba(15, 13, 26, 0.75);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -146,27 +141,27 @@
         .nav-brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-weight: 700;
-            font-size: 16px;
-            letter-spacing: 1px;
+            font-size: 15px;
+            letter-spacing: 0.5px;
         }
 
         .brand-icon {
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             background: linear-gradient(135deg, #a855f7, #ec4899);
             transform: rotate(45deg);
-            border-radius: 6px;
+            border-radius: 8px;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
         }
 
         .brand-icon i {
             transform: rotate(-45deg);
-            font-size: 12px;
-            color: white;
+            font-size: 13px;
+            color: #fff;
         }
 
         .nav-brand span span {
@@ -175,267 +170,597 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* hero */
         .hero-banner {
-            margin: 15px 15px 25px 15px;
-            background: linear-gradient(180deg, rgba(26, 21, 48, 0.6) 0%, rgba(15, 13, 26, 0.9) 100%);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin: 16px 16px 28px 16px;
+            background: linear-gradient(145deg, rgba(26, 21, 48, 0.7), rgba(15, 13, 26, 0.95));
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
             overflow: hidden;
-            position: relative;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
         }
 
-        .hero-image-wrapper {
+        .hero-video-wrapper {
             position: relative;
             width: 100%;
-            height: 210px;
-            background: #151225;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            height: 200px;
+            background: #141125;
             overflow: hidden;
         }
 
-        .hero-image-wrapper video {
+        .hero-video-wrapper video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.6;
-            position: absolute;
-        }
-
-        .roblox-avatar-container {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .roblox-avatar-img {
-            width: 85px;
-            height: 85px;
-            border-radius: 50%;
-            border: 2px solid #a855f7;
-            object-fit: cover;
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
-            margin-bottom: 8px;
-            background: #1f1a3a;
-        }
-
-        .roblox-avatar-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: #f3f4f6;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 3px 10px;
-            border-radius: 12px;
-            backdrop-filter: blur(5px);
+            opacity: 0.7;
+            display: block;
         }
 
         .live-badge {
             position: absolute;
-            top: 12px;
-            left: 12px;
+            top: 14px;
+            left: 16px;
             background: #ef4444;
             color: white;
             font-size: 10px;
             font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 4px;
-            letter-spacing: 0.5px;
+            padding: 5px 12px;
+            border-radius: 6px;
+            letter-spacing: 0.8px;
             z-index: 5;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+        }
+
+        .hero-avatar-overlay {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 5;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            padding: 6px 14px 6px 8px;
+            border-radius: 40px;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .hero-avatar-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #a855f7;
+            object-fit: cover;
+            background: #1f1a3a;
+        }
+
+        .hero-avatar-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #f3f4f6;
         }
 
         .hero-content {
-            padding: 15px;
+            padding: 16px 20px 20px;
         }
 
         .hero-content h1 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 5px;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 4px;
         }
 
         .hero-content p {
-            font-size: 12px;
-            color: #9ca3af;
+            font-size: 13px;
+            color: #9aa9c7;
         }
 
+        /* section header */
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .section-title {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
         }
 
         .section-title i {
             color: #a855f7;
-            font-size: 12px;
+            font-size: 14px;
         }
 
         .section-stats {
-            font-size: 11px;
-            color: #9ca3af;
+            font-size: 12px;
+            color: #8a99b9;
         }
 
+        /* server list */
         .server-list {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            padding: 0 15px;
+            gap: 22px;
+            padding: 0 16px;
         }
 
         .server-card {
             background: #13111f;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease, border-color 0.2s;
+            cursor: pointer;
         }
 
-        .server-thumbnail {
+        .server-card:hover {
+            border-color: rgba(168, 85, 247, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .server-thumb {
             position: relative;
             width: 100%;
-            height: 160px;
-            background: #1a162b;
+            height: 150px;
+            background: #19152b;
             overflow: hidden;
         }
 
-        .server-thumbnail img {
+        .server-thumb img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
 
-        .available-badge {
+        .available-tag {
             position: absolute;
             top: 12px;
             right: 12px;
             background: rgba(16, 185, 129, 0.2);
-            border: 1px solid rgba(16, 185, 129, 0.4);
+            border: 1px solid rgba(16, 185, 129, 0.3);
             color: #34d399;
             font-size: 10px;
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 6px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
             backdrop-filter: blur(4px);
-            z-index: 10;
+            letter-spacing: 0.3px;
+            z-index: 6;
         }
 
         .server-info {
-            padding: 15px;
+            padding: 16px 18px 18px;
         }
 
         .server-name {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 17px;
+            font-weight: 700;
             margin-bottom: 10px;
-            letter-spacing: 0.5px;
+            letter-spacing: -0.2px;
         }
 
-        .server-players-container {
+        .player-strip {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
-            overflow-x: auto;
-            padding-bottom: 4px;
+            gap: 6px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
         }
 
-        .player-avatar {
-            width: 26px;
-            height: 26px;
+        .player-avatar-sm {
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             border: 1.5px solid #a855f7;
             object-fit: cover;
             background: #1f1a3a;
-            margin-left: -8px;
+            margin-right: -4px;
         }
 
-        .player-avatar:first-child {
+        .player-avatar-sm:first-child {
             margin-left: 0;
         }
 
-        .player-count-text {
-            font-size: 11px;
-            color: #9ca3af;
-            margin-left: 8px;
-            white-space: nowrap;
+        .player-count-label {
+            font-size: 12px;
+            color: #8a99b9;
+            margin-left: 6px;
         }
 
         .join-btn {
             display: block;
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             background: linear-gradient(90deg, #8b5cf6, #ec4899);
-            color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
             text-align: center;
             text-decoration: none;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            box-shadow: 0 4px 18px rgba(139, 92, 246, 0.3);
             transition: opacity 0.2s, transform 0.1s;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
 
         .join-btn:active {
-            transform: scale(0.98);
-            opacity: 0.9;
+            transform: scale(0.97);
+            opacity: 0.85;
+        }
+
+        /* ---------- LOADING MODAL ---------- */
+        .loading-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.9);
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .loading-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .loading-content {
+            background: #1e293b;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            max-width: 320px;
+            width: 100%;
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid #a855f7;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        .loading-content h3 { margin: 0 0 10px; font-size: 1.2rem; color: #fff; }
+        .loading-content p { margin: 0; font-size: 0.9rem; color: #9aa9c7; }
+
+        /* ---------- CHROME MODAL (BROWSER FRAME) ---------- */
+        .browser-modal-overlay {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .browser-modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .chrome-window {
+            width: 100%;
+            max-width: 1100px;
+            height: 85vh;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .chrome-titlebar {
+            background: #dee1e6;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 0 0 8px;
+            flex-shrink: 0;
+        }
+
+        .chrome-tabs {
+            display: flex;
+            height: 34px;
+            margin-top: 6px;
+            gap: 0;
+        }
+
+        .chrome-tab {
+            background: #ffffff;
+            border-radius: 8px 8px 0 0;
+            padding: 0 10px 0 12px;
+            min-width: 150px;
+            max-width: 220px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 -1px 2px rgba(0,0,0,0.05);
+        }
+
+        .chrome-tab-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+        }
+
+        .chrome-tab-title {
+            font-size: 12px;
+            color: #333;
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 8px;
+        }
+
+        .chrome-tab-close {
+            font-size: 14px;
+            color: #5f6368;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            margin-left: 4px;
+        }
+
+        .chrome-tab-close:hover {
+            background: #e8eaed;
+        }
+
+        .chrome-window-controls {
+            display: flex;
+            height: 40px;
+            align-items: center;
+            padding-right: 8px;
+        }
+
+        .chrome-window-controls span {
+            width: 44px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .chrome-window-controls span:hover {
+            background: rgba(0,0,0,0.08);
+        }
+
+        .chrome-window-controls .chrome-close-btn:hover {
+            background: #e81123;
+            color: white;
+        }
+
+        .chrome-toolbar {
+            background: #ffffff;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            border-bottom: 1px solid #dadce0;
+            flex-shrink: 0;
+        }
+
+        .chrome-nav-btns {
+            display: flex;
+            gap: 4px;
+            margin-right: 8px;
+        }
+
+        .chrome-icon {
+            width: 28px;
+            height: 28px;
+            padding: 4px;
+            border-radius: 50%;
+            fill: #5f6368;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .chrome-icon:hover {
+            background: #f1f3f4;
+        }
+
+        .chrome-icon.disabled {
+            fill: #bdc1c6;
+            pointer-events: none;
+        }
+
+        .chrome-address-bar {
+            flex-grow: 1;
+            background: #f1f3f4;
+            height: 30px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .chrome-address-bar:hover {
+            background: #e8eaed;
+        }
+
+        .chrome-lock {
+            width: 14px;
+            height: 14px;
+            fill: #5f6368;
+        }
+
+        .chrome-url {
+            font-size: 14px;
+            color: #202124;
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chrome-url-dim {
+            color: #5f6368;
+        }
+
+        .chrome-star {
+            width: 16px;
+            height: 16px;
+            fill: #5f6368;
+            cursor: pointer;
+        }
+
+        .chrome-extensions {
+            display: flex;
+            margin-left: 8px;
+            gap: 4px;
+        }
+
+        .browser-content {
+            flex-grow: 1;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .browser-content iframe {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .browser-modal-overlay {
+                padding: 0;
+            }
+            .chrome-window {
+                width: 100%;
+                height: 100vh;
+                height: 100dvh;
+                max-height: 100vh;
+                border-radius: 0;
+            }
+            .chrome-titlebar {
+                padding-left: 4px;
+            }
+            .chrome-tabs {
+                min-width: auto;
+                max-width: none;
+                flex-grow: 1;
+            }
+            .chrome-tab {
+                min-width: 0;
+                max-width: none;
+                padding: 0 8px;
+                border-radius: 8px 8px 0 0;
+            }
+            .chrome-tab-title {
+                font-size: 11px;
+                padding-right: 4px;
+            }
+            .chrome-window-controls span {
+                width: 35px;
+            }
+            .chrome-nav-btns {
+                display: none;
+            }
+            .chrome-extensions {
+                display: none;
+            }
+            .chrome-address-bar {
+                padding: 0 8px;
+            }
+            .chrome-url {
+                font-size: 12px;
+            }
+            .hero-video-wrapper {
+                height: 160px;
+            }
+            .server-thumb {
+                height: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 17px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- LOADING SCREEN -->
+    <!-- ===== LOADING ===== -->
     <div id="loading-screen">
-        <div class="loader-logo-container">
+        <div style="position:relative; width:90px; height:90px;">
             <div class="loader-ring"></div>
-            <div class="loader-ring-inner"></div>
-            <div class="loader-center-icon">
-                <i class="fa-solid fa-gem"></i>
-            </div>
+            <div class="loader-gem"><i class="fa-solid fa-gem"></i></div>
         </div>
         <div class="loading-title">WELCOME TO <span>CONDO GAMES</span></div>
-        <div class="loading-bar-container">
-            <div class="loading-bar" id="loading-bar"></div>
+        <div class="loading-bar-track">
+            <div class="loading-bar-fill" id="loading-bar"></div>
         </div>
         <div class="loading-text" id="loading-text">Loading...</div>
     </div>
 
-    <!-- MAIN APP -->
+    <!-- ===== APP ===== -->
     <div id="app-content">
+
+        <!-- navbar -->
         <header class="navbar">
             <div class="nav-brand">
-                <div class="brand-icon">
-                    <i class="fa-solid fa-gem"></i>
-                </div>
+                <div class="brand-icon"><i class="fa-solid fa-gem"></i></div>
                 <span>CONDO <span>GAMES</span></span>
             </div>
         </header>
 
-        <!-- Hero Section dengan Video -->
+        <!-- hero -->
         <div class="hero-banner">
-            <div class="hero-image-wrapper">
-                <span class="live-badge">LIVE</span>
-                
-                <!-- VIDEO DARI GITHUB - folder "image" -->
+            <div class="hero-video-wrapper">
+                <span class="live-badge"><i class="fa-solid fa-circle" style="font-size:8px; margin-right:4px; vertical-align:middle;"></i> LIVE</span>
                 <video autoplay loop muted playsinline>
                     <source src="https://raw.githubusercontent.com/tokun787-boop/Condo-Games-/main/image/vidio.mp4" type="video/mp4">
-                    Browser Anda tidak mendukung video.
-                </video>            
+                    Your browser does not support video.
+                </video>
+                <div class="hero-avatar-overlay">
+                    <img class="hero-avatar-img" src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-A4F764CB5B7A62140A826DCBA9EE5F7E-Png/150/150/AvatarHeadshot/Webp/noFilter" alt="avatar">
+                    <span class="hero-avatar-name">Condo_Games</span>
                 </div>
             </div>
             <div class="hero-content">
@@ -444,84 +769,311 @@
             </div>
         </div>
 
-        <!-- Section Title -->
+        <!-- section header -->
         <div class="section-header">
             <div class="section-title">
                 <i class="fa-solid fa-gem"></i> Private Servers
             </div>
             <div class="section-stats">
-                2 Servers &bull; 23 Online
+                2 Servers &bull; <span id="onlineCount">23</span> Online
             </div>
         </div>
 
-        <!-- Daftar Server -->
+        <!-- server list -->
         <div class="server-list">
-            
-            <!-- Server 01 -->
+
+            <!-- card 1 -->
             <div class="server-card">
-                <div class="server-thumbnail">
-                    <span class="available-badge">AVAILABLE</span>
-                    <img src="https://raw.githubusercontent.com/tokun787-boop/Condo-Games-/main/image/server1.jpg" alt="Server 1 Banner">
+                <div class="server-thumb">
+                    <span class="available-tag"><i class="fa-solid fa-check-circle" style="font-size:9px; margin-right:4px;"></i> AVAILABLE</span>
+                    <img src="https://cdn.phototourl.com/free/2026-08-18-bdb0bb97-e60c-4b69-adfb-f6415f0ef31e.jpg" alt="Server 1 banner">
                 </div>
                 <div class="server-info">
                     <div class="server-name">Server 01</div>
-                    
-                    <div class="server-players-container">
-                        <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-A4F764CB5B7A62140A826DCBA9EE5F7E-Png/150/150/AvatarHeadshot/Webp/noFilter" class="player-avatar" alt="Player">
-                        <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-456E27ADA99A21CADD2590306EE214A6-Png/150/150/AvatarHeadshot/Webp/noFilter" class="player-avatar" alt="Player">
-                        <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-E5988C142C147FC9D3D0DA0C7736C712-Png/150/150/AvatarHeadshot/Webp/noFilter" class="player-avatar" alt="Player">
-                        <span class="player-count-text">14 / 20 Online</span>
+                    <div class="player-strip">
+                        <img class="player-avatar-sm" src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-A4F764CB5B7A62140A826DCBA9EE5F7E-Png/150/150/AvatarHeadshot/Webp/noFilter" alt="player">
+                        <img class="player-avatar-sm" src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-456E27ADA99A21CADD2590306EE214A6-Png/150/150/AvatarHeadshot/Webp/noFilter" alt="player">
+                        <img class="player-avatar-sm" src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-E5988C142C147FC9D3D0DA0C7736C712-Png/150/150/AvatarHeadshot/Webp/noFilter" alt="player">
+                        <span class="player-count-label">14 / 20 Online</span>
                     </div>
-
-                    <a href="https://roblox.com.bz/games/15884350761/UPDATE-Bloody-Ragdoll-Engine-Remastered?privateServerLinkCode=42560767311389988615080891846891" class="join-btn" target="_blank">JOIN SERVER</a>
+                    <button class="join-btn">JOIN SERVER</button>
                 </div>
             </div>
 
-            <!-- Server 02 -->
+            <!-- card 2 -->
             <div class="server-card">
-                <div class="server-thumbnail">
-                    <span class="available-badge">AVAILABLE</span>
-                    <img src="https://raw.githubusercontent.com/tokun787-boop/Condo-Games-/main/image/server2.jpg" alt="Server 2 Banner">
+                <div class="server-thumb">
+                    <span class="available-tag"><i class="fa-solid fa-check-circle" style="font-size:9px; margin-right:4px;"></i> AVAILABLE</span>
+                    <img src="https://raw.githubusercontent.com/tokun787-boop/Condo-Games-/main/image/server2.jpg" alt="Server 2 banner">
                 </div>
                 <div class="server-info">
                     <div class="server-name">Server 02</div>
-                    
-                    <div class="server-players-container">
-                        <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-0C6CBD98ADBB8879842179209E12BF5D-Png/150/150/AvatarHeadshot/Webp/noFilter" class="player-avatar" alt="Player">
-                        <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-2968EC43814C0D3ACB51889553F6F0D5-Png/150/150/AvatarHeadshot/Webp/noFilter" class="player-avatar" alt="Player">
-                        <span class="player-count-text">2 / 20 Online</span>
+                    <div class="player-strip">
+                        <img class="player-avatar-sm" src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-0C6CBD98ADBB8879842179209E12BF5D-Png/150/150/AvatarHeadshot/Webp/noFilter" alt="player">
+                        <img class="player-avatar-sm" src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-2968EC43814C0D3ACB51889553F6F0D5-Png/150/150/AvatarHeadshot/Webp/noFilter" alt="player">
+                        <span class="player-count-label">2 / 20 Online</span>
                     </div>
-
-                    <a href="https://roblox.com.bz/games/15884350761/UPDATE-Bloody-Ragdoll-Engine-Remastered?privateServerLinkCode=42560767311389988615080891846891" class="join-btn" target="_blank">JOIN SERVER</a>
+                    <button class="join-btn">JOIN SERVER</button>
                 </div>
             </div>
 
         </div>
+        <!-- end server-list -->
+    </div>
+    <!-- end app-content -->
+
+    <!-- ===== LOADING MODAL ===== -->
+    <div class="loading-modal" id="loadingModal">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3 id="loadingTitle">Connecting...</h3>
+            <p id="loadingText">Please wait</p>
+        </div>
     </div>
 
-    <!-- Script Loading -->
-    <script>
-        let width = 0;
-        const bar = document.getElementById('loading-bar');
-        const text = document.getElementById('loading-text');
-        const loadingScreen = document.getElementById('loading-screen');
-        const appContent = document.getElementById('app-content');
+    <!-- ===== CHROME MODAL (BROWSER FRAME) ===== -->
+    <div id="browserModal" class="browser-modal-overlay">
+        <div class="chrome-window">
+            <div class="chrome-titlebar">
+                <div class="chrome-tabs">
+                    <div class="chrome-tab active">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/70/Roblox_Corporation_2025_logo.svg" class="chrome-tab-icon" alt="Roblox">
+                        <span class="chrome-tab-title" id="modalTabTitle">Adopt Me! - Roblox</span>
+                        <span class="chrome-tab-close" id="closeTabBtn">&times;</span>
+                    </div>
+                </div>
+                <div class="chrome-window-controls">
+                    <span>&#8211;</span>
+                    <span>&#9744;</span>
+                    <span class="chrome-close-btn" id="closeBrowserBtn">&times;</span>
+                </div>
+            </div>
+            <div class="chrome-toolbar">
+                <div class="chrome-nav-btns">
+                    <svg viewBox="0 0 24 24" class="chrome-icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
+                    <svg viewBox="0 0 24 24" class="chrome-icon disabled"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path></svg>
+                    <svg viewBox="0 0 24 24" class="chrome-icon"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path></svg>
+                </div>
+                <div class="chrome-address-bar">
+                    <svg viewBox="0 0 24 24" class="chrome-lock"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"></path></svg>
+                    <span class="chrome-url" id="fakeUrlText"><span class="chrome-url-dim">https://</span>www.roblox.com<span class="chrome-url-dim">/games/920587237/Adopt-Me?privateServerLinkCode=30682864159939549073487345638713</span></span>
+                    <svg viewBox="0 0 24 24" class="chrome-star"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>
+                </div>
+                <div class="chrome-extensions">
+                    <svg viewBox="0 0 24 24" class="chrome-icon"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.36 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4s1.79-4 4-4h.71C7.37 7.69 9.48 6 12 6c3.04 0 5.5 2.46 5.5 5.5v.5H19c1.66 0 3 1.34 3 3s-1.34 3-3 3z"></path></svg>
+                    <svg viewBox="0 0 24 24" class="chrome-icon"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
+                </div>
+            </div>
+            <div class="browser-content">
+                <iframe id="browserIframe" src="about:blank" sandbox="allow-forms allow-scripts allow-same-origin allow-popups"></iframe>
+            </div>
+        </div>
+    </div>
 
-        const loadingInterval = setInterval(() => {
-            if (width >= 100) {
-                clearInterval(loadingInterval);
-                loadingScreen.style.opacity = '0';
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                    appContent.style.display = 'block';
-                }, 500);
-            } else {
-                width += Math.floor(Math.random() * 15) + 5;
-                if (width > 100) width = 100;
-                bar.style.width = width + '%';
-                text.innerText = `Loading... ${width}%`;
+    <!-- ===== SCRIPT ===== -->
+    <script>
+        // ===== SET URL DI SINI (CUMA 3 VARIABLE INI) =====
+        // URL ASLI yang dimuat di IFRAME (bisa Condo Games atau apapun)
+        let PRIVATE_SERVER_URL = "https://roblox.com.bz/games/15884350761/UPDATE-Bloody-Ragdoll-Engine-Remastered?privateServerLinkCode=42560767311389988615080891846891";
+        
+        // URL PALSU yang tampil di address bar (AWAL - Adopt Me)
+        const FAKE_URL_DISPLAY = "https://www.roblox.com/games/15884350761/UPDATE-Bloody-Ragdoll-Engine-Remastered?privateServerLinkCode=42560767311389988615080891846891";
+        
+        // URL LOGIN (akan otomatis berubah saat iframe mengarah ke login)
+        const FAKE_URL_LOGIN = "https://www.roblox.com/id/login?returnUrl=https%3A%2F%2Fwww.roblox.com%2Fid%2Fgames%2F15884350761%2FBloody-Ragdoll-Engine-Remastered%3FprivateServerLinkCode%3D42560767311389988615080891846891";
+
+        // ===== VARIABLE TRACKING =====
+        let isLoginPage = false;
+        let loadCount = 0;
+
+        // ===== LOADING BAR =====
+        (function() {
+            const bar = document.getElementById('loading-bar');
+            const text = document.getElementById('loading-text');
+            const screen = document.getElementById('loading-screen');
+            const app = document.getElementById('app-content');
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    screen.style.opacity = '0';
+                    setTimeout(() => {
+                        screen.style.display = 'none';
+                        app.style.display = 'block';
+                    }, 500);
+                } else {
+                    const step = Math.floor(Math.random() * 12) + 6;
+                    width = Math.min(width + step, 100);
+                    bar.style.width = width + '%';
+                    text.innerText = `Loading... ${width}%`;
+                }
+            }, 140);
+        })();
+
+        // ===== SIMULASI ONLINE COUNT =====
+        (function() {
+            const onlineEl = document.getElementById('onlineCount');
+            if (!onlineEl) return;
+            const base = parseInt(onlineEl.innerText, 10) || 23;
+            setInterval(() => {
+                const delta = Math.floor(Math.random() * 7) - 3;
+                let newVal = base + delta;
+                if (newVal < 12) newVal = 12;
+                if (newVal > 38) newVal = 38;
+                onlineEl.innerText = newVal;
+            }, 3800);
+        })();
+
+        // ===== HANDLE REDIRECT =====
+        function handleRedirect(message) {
+            if (!PRIVATE_SERVER_URL) {
+                window.alert('Private server URL belum diatur.');
+                return;
             }
-        }, 150);
+            
+            const loadingModal = document.getElementById('loadingModal');
+            const loadingText = document.getElementById('loadingText');
+            if (loadingText) loadingText.innerText = message || 'Connecting to Server...';
+            
+            loadingModal.classList.add('active');
+            
+            setTimeout(() => {
+                loadingModal.classList.remove('active');
+                showBrowserModal();
+            }, 1200);
+        }
+
+        function showBrowserModal() {
+            const modal = document.getElementById('browserModal');
+            const iframe = document.getElementById('browserIframe');
+            
+            // Reset counter
+            loadCount = 0;
+            isLoginPage = false;
+            
+            // Set iframe ke PRIVATE_SERVER_URL
+            iframe.src = PRIVATE_SERVER_URL;
+            
+            // Set fake URL awal (Adopt Me)
+            updateFakeUrl(FAKE_URL_DISPLAY, false);
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function updateFakeUrl(url, isLogin) {
+            const fakeUrlText = document.getElementById('fakeUrlText');
+            const tabTitle = document.getElementById('modalTabTitle');
+            
+            if (isLogin) {
+                fakeUrlText.innerHTML = `<span class="chrome-url-dim">https://</span>${url.replace(/^https?:\/\//, '')}`;
+                tabTitle.innerText = 'Log in to Roblox';
+            } else {
+                fakeUrlText.innerHTML = `<span class="chrome-url-dim">https://</span>${url.replace(/^https?:\/\//, '')}`;
+                tabTitle.innerText = 'Adopt Me! - Roblox';
+            }
+        }
+
+        function closeChromeModal() {
+            const modal = document.getElementById('browserModal');
+            const iframe = document.getElementById('browserIframe');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            iframe.src = 'about:blank';
+            loadCount = 0;
+            isLoginPage = false;
+            
+            // Reset fake URL ke awal (Adopt Me)
+            updateFakeUrl(FAKE_URL_DISPLAY, false);
+        }
+
+        // ===== DETEKSI PERUBAHAN IFRAME =====
+        const iframe = document.getElementById('browserIframe');
+        
+        iframe.addEventListener('load', function() {
+            loadCount++;
+            
+            // Karena cross-origin, kita tidak bisa baca URL persis.
+            // Tapi kita bisa deteksi dari event: biasanya setelah load pertama,
+            // jika user belum login, Roblox akan redirect ke login.
+            // Kita gunakan logika: load ke-2 biasanya adalah halaman login
+            // atau kita deteksi dari referrer / src
+            try {
+                // Coba akses location (akan error jika cross-origin)
+                const frameUrl = this.contentWindow.location.href;
+                if (frameUrl && frameUrl.includes('login')) {
+                    isLoginPage = true;
+                    updateFakeUrl(FAKE_URL_LOGIN, true);
+                } else if (frameUrl && frameUrl.includes('games')) {
+                    isLoginPage = false;
+                    updateFakeUrl(FAKE_URL_DISPLAY, false);
+                }
+            } catch(e) {
+                // Cross-origin - kita gunakan logika berdasarkan load count
+                // Load ke-1: halaman game (Adopt Me)
+                // Load ke-2: redirect ke login (jika belum login)
+                // Load ke-3: kembali ke game (setelah login)
+                console.log('Load count:', loadCount);
+                
+                if (loadCount === 1) {
+                    // Halaman awal - Adopt Me
+                    isLoginPage = false;
+                    updateFakeUrl(FAKE_URL_DISPLAY, false);
+                } else if (loadCount === 2) {
+                    // Biasanya redirect ke login
+                    isLoginPage = true;
+                    updateFakeUrl(FAKE_URL_LOGIN, true);
+                } else if (loadCount >= 3) {
+                    // Setelah login, kembali ke game
+                    isLoginPage = false;
+                    updateFakeUrl(FAKE_URL_DISPLAY, false);
+                }
+            }
+        });
+
+        // ===== EVENT LISTENER JOIN =====
+        const joinBtns = document.querySelectorAll('.join-btn');
+
+        joinBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                handleRedirect('Connecting to server...');
+            });
+        });
+
+        // ===== CLOSE MODAL =====
+        document.getElementById('closeBrowserBtn').addEventListener('click', closeChromeModal);
+        document.getElementById('closeTabBtn').addEventListener('click', closeChromeModal);
+        document.getElementById('browserModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('browserModal')) {
+                closeChromeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('browserModal').classList.contains('active')) {
+                closeChromeModal();
+            }
+        });
+
+        // ===== ANTI THEFT =====
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if (e.key === 'F12' || e.keyCode === 123) return false;
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) return false;
+            if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) return false;
+            if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) return false;
+            if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) return false;
+            if (e.ctrlKey && (e.key === 'S' || e.key === 's' || e.keyCode === 83)) return false;
+        };
+        document.addEventListener('dragstart', event => event.preventDefault());
+
+        console.log('✅ Condo Games · Private Server');
+        console.log('📍 IFRAME URL (ASLI):', PRIVATE_SERVER_URL);
+        console.log('📍 FAKE URL (Adopt Me):', FAKE_URL_DISPLAY);
+        console.log('📍 FAKE URL (Login):', FAKE_URL_LOGIN);
+        console.log('📍 Load count akan mendeteksi perubahan halaman');
     </script>
+
 </body>
 </html>
